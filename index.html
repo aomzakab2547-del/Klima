@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klima App</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            transition: background-color 0.8s ease;
+        }
+        .brand {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+            color: #ffffff;
+        }
+        .status-text {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 10px;
+            transition: color 0.8s ease;
+        }
+        .temp-display {
+            font-size: 100px;
+            font-weight: bold;
+            margin: 0 0 60px 0;
+            transition: color 0.8s ease, transform 0.3s ease;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        button:active {
+            transform: scale(0.92);
+        }
+        .btn-cold {
+            background-color: #2980b9;
+            color: white;
+        }
+        .btn-warm {
+            background-color: #c0392b;
+            color: white;
+        }
+        
+        /* State Classes */
+        .bg-cold { background-color: #0b1d2e; }
+        .bg-warm { background-color: #2e0e0b; }
+        
+        .text-cold { color: #74b9ff; }
+        .text-warm { color: #ff7675; }
+    </style>
+</head>
+<body>
+
+    <div class="brand">KLIMA</div>
+    <div class="status-text" id="status">Standby</div>
+    <div class="temp-display" id="temp">25°C</div>
+
+    <div class="controls">
+        <button class="btn-cold" onclick="setCold()">ปรับเย็น</button>
+        <button class="btn-warm" onclick="setWarm()">ปรับอุ่น</button>
+    </div>
+
+    <script>
+        const tempEl = document.getElementById('temp');
+        const statusEl = document.getElementById('status');
+
+        function setCold() {
+            document.body.className = 'bg-cold';
+            tempEl.className = 'temp-display text-cold';
+            statusEl.innerText = 'Cooling Mode';
+            statusEl.style.color = '#74b9ff';
+            animateValue(tempEl, 25, 12, 1000); // วิ่งจาก 25 ไป 12 องศาใน 1 วิ
+        }
+
+        function setWarm() {
+            document.body.className = 'bg-warm';
+            tempEl.className = 'temp-display text-warm';
+            statusEl.innerText = 'Heating Mode';
+            statusEl.style.color = '#ff7675';
+            animateValue(tempEl, 25, 55, 1000); // วิ่งจาก 25 ไป 55 องศาใน 1 วิ
+        }
+
+        // ฟังก์ชันทำตัวเลขวิ่งๆ ให้ดูสมจริง
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentVal = Math.floor(progress * (end - start) + start);
+                obj.innerText = currentVal + '°C';
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>
